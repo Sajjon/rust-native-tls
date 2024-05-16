@@ -7,17 +7,6 @@ use self::security_framework::base;
 use self::security_framework::certificate::SecCertificate;
 use self::security_framework::identity::SecIdentity;
 use self::security_framework::import_export::{ImportedIdentity, Pkcs12ImportOptions};
-use self::security_framework::secure_transport::{
-    self, ClientBuilder, SslConnectionType, SslContext, SslProtocol, SslProtocolSide,
-};
-use self::security_framework_sys::base::errSecIO;
-use self::tempfile::TempDir;
-use std::error;
-use std::fmt;
-use std::io;
-use std::sync::Mutex;
-use std::sync::{Once, ONCE_INIT};
-
 #[cfg(not(target_os = "ios"))]
 use self::security_framework::os::macos::certificate::{PropertyType, SecCertificateExt};
 #[cfg(not(target_os = "ios"))]
@@ -26,8 +15,19 @@ use self::security_framework::os::macos::certificate_oids::CertificateOid;
 use self::security_framework::os::macos::import_export::{ImportOptions, SecItems};
 #[cfg(not(target_os = "ios"))]
 use self::security_framework::os::macos::keychain::{self, KeychainSettings, SecKeychain};
+use self::security_framework::secure_transport::{
+    self, ClientBuilder, SslConnectionType, SslContext, SslProtocol, SslProtocolSide,
+};
+use self::security_framework_sys::base::errSecIO;
 #[cfg(not(target_os = "ios"))]
 use self::security_framework_sys::base::errSecParam;
+use self::tempfile::TempDir;
+use imp::security_framework::os::macos::import_export::Pkcs12ImportOptionsExt;
+use std::error;
+use std::fmt;
+use std::io;
+use std::sync::Mutex;
+use std::sync::{Once, ONCE_INIT};
 
 use {Protocol, TlsAcceptorBuilder, TlsConnectorBuilder};
 
